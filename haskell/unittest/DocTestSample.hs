@@ -9,10 +9,9 @@ module TestSample where
 -- >>> addThree 0
 -- 3
 --
+-- テストケースの自動生成
 -- prop> addThree x == x + 3
 
 addThree :: Int -> Int
-addThree x
-    | x < 100 = x+3
-    | otherwise = x+2
+addThree = (+3)
 
