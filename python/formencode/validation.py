@@ -9,5 +9,6 @@ if __name__ == '__main__':
         try:
             v = formencode.validators.int()
             print(v.to_python(d))
-        except:
-            print('fail')
+        except formencode.Invalid as e:
+            # http://www.formencode.org/en/latest/modules/api.html?highlight=invalid#formencode.api.Invalid
+            print(e)
