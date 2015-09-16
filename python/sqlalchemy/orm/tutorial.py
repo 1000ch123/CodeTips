@@ -46,3 +46,8 @@ if __name__ == '__main__':
 
     my_user = session.query(User).filter_by(name='maki').first()
     print(my_user)
+
+    maki.password = 'hogehuga'
+    print(my_user)
+    session.commit()
+    print(my_user)
