@@ -83,3 +83,17 @@ if __name__ == '__main__':
     print('--- after commit ---')
     print(session.new)
     print(session.dirty)
+
+    # where-inでselect
+    print(session.query(User).filter(User.name.in_(['maki', 'nico'])).all())
+
+    # rollback
+    # queryはdbを更新するのではなく，DBデータを参考にpython世界を書き換えるぽい
+    # commitして初めて更新される
+    # commitするまではrollbackできるぜ！
+    print('--- rollback ---')
+    nise_maki = User(name='nise maki', fullname='nise maki', password='nico')
+    session.add(nise_maki)
+    print(session.query(User).all())
+    session.rollback()  # commit前ならroolback可能
+    print(session.query(User).all())
