@@ -30,3 +30,7 @@ if __name__ == '__main__':
 
     # table schema 作成
     print(Base.metadata.create_all(engine))
+
+    # レコードの作成
+    maki = User(name='maki', fullname='maki nishikino', password='niconico')
+    print(maki)
