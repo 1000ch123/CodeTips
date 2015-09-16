@@ -18,15 +18,15 @@ class User(Base):
     password = Column(String(12))
 
     def __repr__(self):
-        return "<User(name='%s', fullname='%s', password='%s')>" % (
-            self.name, self.fullname, self.password)
+        return "<User(id=%s, name='%s', fullname='%s', password='%s')>" % (
+            self.id, self.name, self.fullname, self.password)
 
 
 if __name__ == '__main__':
     print(sqlalchemy.__version__)
 
     # DBへの接続
-    engine = create_engine('sqlite:///:memory:', echo=True)\
+    engine = create_engine('sqlite:///:memory:', echo=False)\
 
     # table schema 作成
     print(Base.metadata.create_all(engine))
@@ -42,12 +42,27 @@ if __name__ == '__main__':
     session = Session()
 
     # レコード登録
-    session.add(maki)
+    print('--- before insert ---')
+    print(maki)
+    session.add(maki)  # この時点ではpending
+    print('--- after insert ---')
+    print(maki)
 
+    # queryオブジェクトを作るとflushされる！=DB更新される
     my_user = session.query(User).filter_by(name='maki').first()
+    print('--- after query ---')
     print(my_user)
+    print(maki)
 
-    maki.password = 'hogehuga'
+    print(maki is my_user)  # もはや同じものをさしているっぽい
+
+    # レコードかきかえ
+    maki.password = 'hogehuga'  # この時点で更新してる
+    print('--- after update ---')
     print(my_user)
+    print(maki)
+
     session.commit()
+
+    print('--- after commit ---')
     print(my_user)
