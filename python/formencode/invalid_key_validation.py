@@ -12,7 +12,7 @@ class MySchema(formencode.schema.Schema):
 # あるキーを含むときinvalid
 if __name__ == '__main__':
     schema = MySchema()
-    schema.ignore_key_missing = True
+    #schema.ignore_key_missing = True
     #schema.allow_extra_fields = True
 
     lack_data = {
