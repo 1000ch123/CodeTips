@@ -48,7 +48,7 @@ if __name__ == '__main__':
     print('--- after insert ---')
     print(maki)
 
-    # queryオブジェクトを作るとflushされる！=DB更新される
+    # queryオブジェクトを作るとflushされる = DB更新される = idがつく
     my_user = session.query(User).filter_by(name='maki').first()
     print('--- after query ---')
     print(my_user)
@@ -60,9 +60,26 @@ if __name__ == '__main__':
     maki.password = 'hogehuga'  # この時点で更新してる
     print('--- after update ---')
     print(my_user)
-    print(maki)
 
     session.commit()
 
     print('--- after commit ---')
     print(my_user)
+
+    # 複数insert
+    session.add_all([
+        User(name='nico', fullname='nico yazawa', password='25252'),
+        User(name='eli', fullname='eli ayase', password='KKE')
+        ])
+    maki.password = 'imiwakannai'  # この時点で更新してる
+
+    # pending確認
+    # 新規追加レコードはnew
+    # updateレコードはdirtyにはいるっぽい
+    print('--- before commit ---')
+    print(session.new)
+    print(session.dirty)
+    session.commit()
+    print('--- after commit ---')
+    print(session.new)
+    print(session.dirty)
