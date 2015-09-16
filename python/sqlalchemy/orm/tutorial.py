@@ -40,3 +40,9 @@ if __name__ == '__main__':
     Session.configure(bind=engine)
     # セッションインスタンスの作成
     session = Session()
+
+    # レコード登録
+    session.add(maki)
+
+    my_user = session.query(User).filter_by(name='maki').first()
+    print(my_user)
