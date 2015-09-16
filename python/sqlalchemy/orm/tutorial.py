@@ -27,3 +27,6 @@ if __name__ == '__main__':
 
     # DBへの接続
     engine = create_engine('sqlite:///:memory:', echo=True)\
+
+    # table schema 作成
+    print(Base.metadata.create_all(engine))
