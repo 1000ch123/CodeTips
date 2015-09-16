@@ -3,7 +3,7 @@
 import sqlalchemy
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
-
+from sqlalchemy.orm import sessionmaker
 
 # マッピング定義のためのベースクラス
 Base = declarative_base()
@@ -34,3 +34,9 @@ if __name__ == '__main__':
     # レコードの作成
     maki = User(name='maki', fullname='maki nishikino', password='niconico')
     print(maki)
+
+    # セッションクラスの作成
+    Session = sessionmaker()
+    Session.configure(bind=engine)
+    # セッションインスタンスの作成
+    session = Session()
