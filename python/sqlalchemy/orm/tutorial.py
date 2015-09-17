@@ -179,3 +179,13 @@ if __name__ == '__main__':
     session.add(maki)
     session.commit()
     print(session.query(Address).filter(Address.user_id == 1).all())
+
+    # join(inner)
+    print('--- join ---')
+    for u in session.query(User)\
+            .join(Address)\
+            .filter(Address.email_address == 'maki@example.com')\
+            .all():
+        print(u)
+    # user以外のデータとれないの？と思うかもしれないが
+    # relationshipのかたちでlinkしているのでUserさえあればなんでもできるんだなこれが
