@@ -18,6 +18,9 @@ class User(Base):
     fullname = Column(String(50))
     password = Column(String(12))
 
+    # こっちに定義してある方が自然かも？
+    addresses = relationship("Address", order_by="Address.id", backref="user")
+
     def __repr__(self):
         return "<User(id=%s, name='%s', fullname='%s', password='%s')>" % (
             self.id, self.name, self.fullname, self.password)
@@ -30,8 +33,8 @@ class Address(Base):
     user_id = Column(Integer, ForeignKey('users.id'))  # 指定はテーブル名ぽい
 
     # relation指定.クラス名ぽい
-    # backref指定はtable名ぽい
-    user = relationship("User", backref=backref('addresses', order_by=id))
+    # backref指定はUserクラスからの参照キー名ぽい
+    # user = relationship("User", backref=backref('addresses', order_by=id))
 
     def __repr__(self):
         return "<Address(email_address='%s')>" % (self.email_address)
@@ -162,4 +165,17 @@ if __name__ == '__main__':
     # or
     # query.filter(or_(User.name == 'maki', User.age == '17'))
 
+    # address追加以降
+    print('--- address ---')
+    print(maki.addresses)
+    maki.addresses = [
+        Address(email_address='maki@example.com')
+        ]
+    print(maki.addresses[0])
+    print(maki.addresses[0].user)
 
+    # 追加情報の保存
+    print(session.query(Address).filter(Address.user_id == 1).all())
+    session.add(maki)
+    session.commit()
+    print(session.query(Address).filter(Address.user_id == 1).all())
