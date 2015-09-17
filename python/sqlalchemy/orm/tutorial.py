@@ -3,7 +3,8 @@
 import sqlalchemy
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship, backref
+from sqlalchemy import ForeignKey
 
 # マッピング定義のためのベースクラス
 Base = declarative_base()
@@ -21,6 +22,19 @@ class User(Base):
         return "<User(id=%s, name='%s', fullname='%s', password='%s')>" % (
             self.id, self.name, self.fullname, self.password)
 
+
+class Address(Base):
+    __tablename__ = 'addresses'
+    id = Column(Integer, primary_key=True)
+    email_address = Column(String, nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'))  # 指定はテーブル名ぽい
+
+    # relation指定.クラス名ぽい
+    # backref指定はtable名ぽい
+    user = relationship("User", backref=backref('addresses', order_by=id))
+
+    def __repr__(self):
+        return "<Address(email_address='%s')>" % (self.email_address)
 
 if __name__ == '__main__':
     print(sqlalchemy.__version__)
@@ -147,5 +161,5 @@ if __name__ == '__main__':
     # query.filter(User.name == 'maki', User.age == '17')
     # or
     # query.filter(or_(User.name == 'maki', User.age == '17'))
-    #
+
 
