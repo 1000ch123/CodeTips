@@ -104,10 +104,15 @@ if __name__ == '__main__':
     for user in session.query(User).order_by(User.id):
         print(user)
 
+    # カンマは重要
+    print('--- querying ---')
+    for name, in session.query(User.name).order_by(User.id):
+        print(name)
+
     # select対象外でもfilter処理自体はできる
     print('--- querying ---')
-    for user in session.query(User.name).order_by(User.id):
-        print(user)
+    for name, in session.query(User.name).order_by(User.id):
+        print(name)
 
     # 複数指定すると KeyedTuppleで帰る
     print('--- querying ---')
@@ -115,3 +120,32 @@ if __name__ == '__main__':
         print(row)
 
     # key名のaliasもできる sample見ろ
+
+    # query filtering
+    # 基本的にはfilterが表現力豊か
+    print('--- filtering ---')
+    for name, in session.query(User.name).\
+            filter(User.fullname == 'maki nishikino'):
+        print(name)
+
+    # filterでつかえるもの
+    # equals
+    # query.filter(User.name == 'ed')
+    # not equals
+    # query.filter(User.name != 'ed')
+    # like
+    # query.filter(User.name.like('%ed'))
+    # in
+    # query.filter(User.name.in_(['ed','maki']))
+    # not in
+    # query.filter(~User.name.in_(['ed','maki']))
+    # null
+    # query.filter(User.name == None)
+    # not null
+    # query.filter(User.name != None)
+    # and
+    # query.filter(User.name == 'maki', User.age == '17')
+    # or
+    # query.filter(or_(User.name == 'maki', User.age == '17'))
+    #
+
