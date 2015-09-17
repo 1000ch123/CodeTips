@@ -3,7 +3,7 @@
 import sqlalchemy
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship, backref
+from sqlalchemy.orm import sessionmaker, relationship, backref, aliased
 from sqlalchemy import ForeignKey
 
 # マッピング定義のためのベースクラス
@@ -169,7 +169,9 @@ if __name__ == '__main__':
     print('--- address ---')
     print(maki.addresses)
     maki.addresses = [
-        Address(email_address='maki@example.com')
+        Address(email_address='maki@example.com'),
+        Address(email_address='makimaki@example.com'),
+        Address(email_address='2525@example.com'),
         ]
     print(maki.addresses[0])
     print(maki.addresses[0].user)
@@ -189,3 +191,17 @@ if __name__ == '__main__':
         print(u)
     # user以外のデータとれないの？と思うかもしれないが
     # relationshipのかたちでlinkしているのでUserさえあればなんでもできるんだなこれが
+    # ん でもその場合outer joinすると何が起こるのだ..?null値入るだけかな
+
+    # さぶくえり
+    stmt = session.query(Address).\
+        filter(Address.email_address != '2525@example.com').\
+        subquery()
+
+    adalias = aliased(Address, stmt)
+
+    for u, a in session.query(User, adalias).\
+            join(adalias, User.addresses):
+        print(u)
+        print(a)
+
