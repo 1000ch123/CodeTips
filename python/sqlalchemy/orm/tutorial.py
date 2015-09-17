@@ -97,3 +97,21 @@ if __name__ == '__main__':
     print(session.query(User).all())
     session.rollback()  # commit前ならroolback可能
     print(session.query(User).all())
+
+    # querying
+    # queryの引数は select 対象と思えば良いかも
+    print('--- querying ---')
+    for user in session.query(User).order_by(User.id):
+        print(user)
+
+    # select対象外でもfilter処理自体はできる
+    print('--- querying ---')
+    for user in session.query(User.name).order_by(User.id):
+        print(user)
+
+    # 複数指定すると KeyedTuppleで帰る
+    print('--- querying ---')
+    for row in session.query(User, User.name).order_by(User.id):
+        print(row)
+
+    # key名のaliasもできる sample見ろ
