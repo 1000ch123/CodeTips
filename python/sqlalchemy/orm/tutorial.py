@@ -204,4 +204,3 @@ if __name__ == '__main__':
             join(adalias, User.addresses):
         print(u)
         print(a)
-
