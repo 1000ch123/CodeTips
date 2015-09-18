@@ -1,5 +1,5 @@
 from sqlalchemy import Table, Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship, backref, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -9,8 +9,7 @@ class Association(Base):
     __tablename__ = 'association'
     parent_id = Column(Integer, ForeignKey('parent.id'), primary_key=True)
     child_id = Column(Integer, ForeignKey('child.id'), primary_key=True)
-    extra_data = Column(String(50))
-    child = relationship("Child", backref="parent_assocs")
+    child = relationship("Child", backref="parents")
 
 
 class Parent(Base):
@@ -26,12 +25,21 @@ class Child(Base):
 
 # create parent, append a child via association
 p = Parent()
-a = Association(extra_data="some data")
-a.child = Child()
-p.children.append(a)
+c = Child()
+a = Association()
+
+# どっちでもいけるよ
+# a.child = c
+# p.children.append(a)
+a.parent = p
+c.parents.append(a)
+
+print(p.children)
+print(c.parents)
 
 # iterate through child objects via association, including association
 # attributes
 for assoc in p.children:
-    print(assoc.extra_data)
     print(assoc.child)
+    print(assoc.parent)
+    print(assoc.child.parents)
