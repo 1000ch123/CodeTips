@@ -142,7 +142,7 @@ if __name__ == '__main__':
     # 基本的にはfilterが表現力豊か
     print('--- filtering ---')
     for name, in session.query(User.name).\
-            filter(User.fullname == 'maki nishikino'):
+            filter(User.id.in_({1})):
         print(name)
 
     # filterでつかえるもの
