@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from sqlalchemy import create_engine, Column, Integer, String, Table
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, backref, aliased
 from sqlalchemy import ForeignKey
@@ -38,6 +38,7 @@ class Tag(Base):
 association_table = Table('association', Base.metadata,
         Column('user_id', Integer, ForeignKey('users.id')),
         Column('tag_id', Integer, ForeignKey('tags.id')),
+        Column('created_at', Integer, default=100)
         )
 
 with Benchmarker(width=20, cycle=10) as bench:
@@ -88,18 +89,31 @@ with Benchmarker(width=20, cycle=10) as bench:
 
     def op(session):
         maki = session.query(User).filter(User.name == 'maki').first()
-        cool = session.query(Tag).filter(Tag.name == 'cool').first()
-        cute = session.query(Tag).filter(Tag.name == 'cute').first()
-        dere = session.query(Tag).filter(Tag.name == 'dere').first()
+
+        # simple way
+        # cool = session.query(Tag).filter(Tag.name == 'cool').first()
+        # cute = session.query(Tag).filter(Tag.name == 'cute').first()
+        # dere = session.query(Tag).filter(Tag.name == 'dere').first()
 
         # relation add
-        maki.tags.extend([cool, cute, dere])
+        # maki.tags.extend([cool, cute, dere])
+
+        # multi add
+        add_tags = session.query(Tag)\
+            .filter(Tag.name.in_(['cool', 'cute', 'pure']))
+        maki.tags.extend(add_tags)
+
         session.commit()
         for u in session.query(User).all():
             print(u)
 
+        for a in session.query(association_table).all():
+            print(a.tag_id)
+            print(a.user_id)
+            print(a.created_at)
+
         # relation delete
-        maki.tags.remove(dere)
+        # maki.tags.remove(dere)
         session.commit()
         for u in session.query(User).all():
             print(u)
