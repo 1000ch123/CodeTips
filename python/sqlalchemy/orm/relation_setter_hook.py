@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from sqlalchemy import create_engine, Column,\
-    Integer, String, DateTime, Table, event
+    Integer, String, Table, event
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session, relationship
 from sqlalchemy import ForeignKey
@@ -11,12 +11,20 @@ from sqlalchemy import ForeignKey
 Base = declarative_base()
 
 
+class Association(Base):
+    __tablename__ = 'assoc'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    tag_id = Column(Integer, ForeignKey('tags.id'))
+    created_at = Column(Integer, default=100)
+
+
 class User(Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(50))
-    tags = relationship("Tag", secondary='association', backref='users')
+    tags = relationship("Tag", secondary=Association.metadata.tables['assoc'], backref='users')
 
     def __repr__(self):
         return "<User:%s (%s)>" % (self.name, [x.name for x in self.tags])
@@ -42,7 +50,7 @@ association_table = Table('association', Base.metadata,
 @event.listens_for(User.tags, 'append', retval=True)
 def receive_append(target, value, initiator):
     session = Session()
-    target = session.query(Tag).filter(Tag.id == value).one()
+    target = session.query(Tag).get(value)
     return target
 
 # DBへの接続
@@ -74,4 +82,7 @@ if __name__ == '__main__':
     print('--- adapt relation ---')
     print(session.query(User).filter(User.name == 'nico').one())
     for i in session.query(Tag).all():
+        print(i)
+
+    for i in session.query(Association.tag_id).all():
         print(i)
