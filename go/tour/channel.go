@@ -17,9 +17,11 @@ func main() {
 	go sum(a[:len(a)/2], c)
 	go sum(a[len(a)/2:], c)
 	x, y := <-c, <-c // receive from c
+
 	// 順序がよくわからんな...
 	// ラベリングできるのんかな
 	// stackされるのんかな
+	// goroutine作った順かな
 
 	fmt.Println(x, y, x+y)
 }
