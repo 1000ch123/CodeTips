@@ -18,14 +18,26 @@ with Benchmarker(loop, width=20, cycle=10, extra=3) as bench:
     b4 = Bid(200, 1)
     b5 = Bid(200, 2)
 
-    @bench("sorted")
-    def _sorted(bm):
+    @bench("sort_lambda_mul")
+    def _sort_lambda(bm):
+        for i in bm:
+            bs = [b1, b3, b4, b5]
+            bs.sort(key=lambda x: (x._id, x._price), reverse=True)
+
+    @bench("sort_op_mul")
+    def _sort_op_mul(bm):
+        for i in bm:
+            bs = [b1, b3, b4, b5]
+            bs.sort(key=attrgetter('_id', '_price'), reverse=True)
+
+    @bench("sorted_op")
+    def _sorted_op(bm):
         for i in bm:
             bs = [b1, b3, b4, b5]
             bs = sorted(bs, key=attrgetter('_id'), reverse=True)
             bs = sorted(bs, key=attrgetter('_price'), reverse=True)
 
-    @bench("sort")
+    @bench("sort_op")
     def _sort(bm):
         for i in bm:
             bs = [b1, b3, b4, b5]
