@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	width, height = 600, 320            // canvas size in pixels
+	width, height = 600, 600            // canvas size in pixels
 	cells         = 100                 // number of grid cells
 	xyrange       = 30.0                // axis ranges (-xyrange..+xyrange)
 	xyscale       = width / 2 / xyrange // pixels per x or y unit
@@ -29,12 +29,12 @@ func main() {
 		"width='%d' height='%d'>", width, height)
 	for i := 0; i < cells; i++ {
 		for j := 0; j < cells; j++ {
-			ax, ay, ai := corner(i+1, j)
-			bx, by, bi := corner(i, j)
-			cx, cy, ci := corner(i, j+1)
-			dx, dy, di := corner(i+1, j+1)
+			ax, ay, af := corner(i+1, j)
+			bx, by, bf := corner(i, j)
+			cx, cy, cf := corner(i, j+1)
+			dx, dy, df := corner(i+1, j+1)
 
-			if ai && bi && ci && di {
+			if af && bf && cf && df {
 				fmt.Printf("<polygon points='%g,%g %g,%g %g,%g %g,%g'/>\n",
 					ax, ay, bx, by, cx, cy, dx, dy)
 			}
@@ -58,8 +58,8 @@ func corner(i, j int) (float64, float64, bool) {
 }
 
 func f(x, y float64) float64 {
-	r := math.Hypot(x, y) // distance from (0,0)
-	return math.Sin(r) / r
+	//r := math.Hypot(x, y)  // distance from (0,0)
+	return math.Sin(x) * math.Cos(y) * 0.1 // r
 }
 
 //!-
