@@ -34,9 +34,11 @@ func main() {
 			cx, cy, cf := corner(i, j+1)
 			dx, dy, df := corner(i+1, j+1)
 
+			r, g, b := polygonColor(i, j)
+
 			if af && bf && cf && df {
-				fmt.Printf("<polygon points='%g,%g %g,%g %g,%g %g,%g'/>\n",
-					ax, ay, bx, by, cx, cy, dx, dy)
+				fmt.Printf("<polygon points='%g,%g %g,%g %g,%g %g,%g' fill='#%02x%02x%02x'/>\n",
+					ax, ay, bx, by, cx, cy, dx, dy, r, g, b)
 			}
 		}
 	}
@@ -49,7 +51,7 @@ func corner(i, j int) (float64, float64, bool) {
 	y := xyrange * (float64(j)/cells - 0.5)
 
 	// Compute surface height z.
-	z := f(x, y)
+	z := f(x, y) * 0.1
 
 	// Project (x,y,z) isometrically onto 2-D SVG canvas (sx,sy).
 	sx := width/2 + (x-y)*cos30*xyscale
@@ -59,7 +61,19 @@ func corner(i, j int) (float64, float64, bool) {
 
 func f(x, y float64) float64 {
 	//r := math.Hypot(x, y)  // distance from (0,0)
-	return math.Sin(x) * math.Cos(y) * 0.1 // r
+	return math.Sin(x) * math.Cos(y) // r
+}
+
+func polygonColor(i, j int) (int, int, int) {
+	// Find point (x,y) at corner of cell (i,j).
+	x := xyrange * (float64(i)/cells - 0.5)
+	y := xyrange * (float64(j)/cells - 0.5)
+
+	// Compute surface height z.
+	z := f(x, y)
+	fmt.Println(z)
+	r := int(255 * 0.5 * (1 + z))
+	return r, 0, 255 - r
 }
 
 //!-
