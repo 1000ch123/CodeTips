@@ -19,4 +19,9 @@ func main() {
 	// 3.2
 	var a float64
 	fmt.Println(a, -a, 1/a, -1/a, a/a)
+
+	var b int32 = 1
+	var c int
+	c = int(b)
+	fmt.Println(c)
 }
