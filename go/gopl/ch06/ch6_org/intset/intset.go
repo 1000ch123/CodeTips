@@ -46,8 +46,10 @@ func (s *IntSet) Add(x int) {
 	s.words[word] |= 1 << bit
 }
 
-func (s *IntSet) AddAll(x ...int) {
-	return
+func (s *IntSet) AddAll(xs ...int) {
+	for _, x := range xs {
+		s.Add(x)
+	}
 }
 
 func (s *IntSet) Remove(x int) {
