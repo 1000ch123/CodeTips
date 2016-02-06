@@ -48,3 +48,31 @@ func Example_two() {
 	// {1 9 42 144}
 	// {[4398046511618 0 65536]}
 }
+
+func Example_ex1() {
+	var x IntSet
+	x.Add(1)
+	x.Add(144)
+	x.Add(9)
+	x.Add(42)
+
+	fmt.Println(x.len()) // 4
+
+	x.Remove(42)
+	fmt.Println(&x) // "{1 9 144}"
+
+	x.Clear()
+	fmt.Println(&x) // "{}"
+
+	y := x.Copy()
+	x.Add(1)
+	fmt.Println(&x) // "{1}"
+	fmt.Println(y)  // "{}"
+
+	// Output:
+	// 4
+	// {1 9 144}
+	// {}
+	// {1}
+	// {}
+}
