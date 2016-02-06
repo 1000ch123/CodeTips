@@ -76,3 +76,13 @@ func Example_ex1() {
 	// {1}
 	// {}
 }
+
+func Example_ex2() {
+	var x IntSet
+	x.AddAll(1, 9, 144)
+
+	fmt.Println(&x) // "{1 9, 144}"
+
+	// Output:
+	// {1 9 144}
+}

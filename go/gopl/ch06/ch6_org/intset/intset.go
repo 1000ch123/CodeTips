@@ -46,6 +46,10 @@ func (s *IntSet) Add(x int) {
 	s.words[word] |= 1 << bit
 }
 
+func (s *IntSet) AddAll(x ...int) {
+	return
+}
+
 func (s *IntSet) Remove(x int) {
 	if !s.Has(x) {
 		return
