@@ -117,8 +117,8 @@ func Example_ex3_3() {
 	y.AddAll(1, 9, 16)
 
 	x.SymmetricDiffernceWith(&y)
-	fmt.Println(&x) // "{144 16}"
+	fmt.Println(&x) // "{16 144}"
 
 	// Output:
-	// {144 16}
+	// {16 144}
 }

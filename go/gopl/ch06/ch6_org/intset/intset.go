@@ -87,12 +87,27 @@ func (s *IntSet) UnionWith(t *IntSet) {
 }
 
 func (s *IntSet) IntersectWith(t *IntSet) {
+	for i, _ := range s.words {
+		if i < len(t.words) {
+			s.words[i] &= t.words[i]
+		} else {
+			s.words[i] = 0
+		}
+	}
 }
 
 func (s *IntSet) DifferenceWith(t *IntSet) {
+	for i, _ := range s.words {
+		if i < len(t.words) {
+			s.words[i] &^= t.words[i]
+		}
+	}
 }
 
 func (s *IntSet) SymmetricDiffernceWith(t *IntSet) {
+	for i, _ := range t.words {
+		s.words[i] ^= t.words[i]
+	}
 }
 
 //!-intset
