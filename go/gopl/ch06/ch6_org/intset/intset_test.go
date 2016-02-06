@@ -56,7 +56,7 @@ func Example_ex1() {
 	x.Add(9)
 	x.Add(42)
 
-	fmt.Println(x.len()) // 4
+	fmt.Println(x.Len()) // 4
 
 	x.Remove(42)
 	fmt.Println(&x) // "{1 9 144}"

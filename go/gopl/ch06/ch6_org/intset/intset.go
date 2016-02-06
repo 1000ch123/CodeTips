@@ -25,8 +25,16 @@ func (s *IntSet) Has(x int) bool {
 	return word < len(s.words) && s.words[word]&(1<<bit) != 0
 }
 
-func (s *IntSet) len() int {
-	return 0
+func (s *IntSet) Len() (cnt int) {
+	for _, word := range s.words {
+		for word > 0 {
+			if word%2 == 1 {
+				cnt++
+			}
+			word = word / 2
+		}
+	}
+	return
 }
 
 // Add adds the non-negative value x to the set.
@@ -39,15 +47,26 @@ func (s *IntSet) Add(x int) {
 }
 
 func (s *IntSet) Remove(x int) {
+	if !s.Has(x) {
+		return
+	}
+
+	word, bit := x/64, uint(x%64)
+	s.words[word] ^= 1 << bit
+
 	return
 }
 
 func (s *IntSet) Clear() {
+	s.words = []uint64{0}
 	return
 }
 
 func (s *IntSet) Copy() *IntSet {
-	return s
+	words := make([]uint64, s.Len())
+	copy(words, s.words)
+	t := IntSet{words}
+	return &t
 }
 
 // UnionWith sets s to the union of s and t.
