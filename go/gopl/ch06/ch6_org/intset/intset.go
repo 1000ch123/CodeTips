@@ -110,8 +110,18 @@ func (s *IntSet) SymmetricDiffernceWith(t *IntSet) {
 	}
 }
 
-func (s *IntSet) Elems() []int {
-	return []int{0}
+func (s *IntSet) Elems() (vs []int) {
+	for i, word := range s.words {
+		cnt := 0
+		for word > 0 {
+			if word%2 == 1 {
+				vs = append(vs, cnt+64*i)
+			}
+			word = word / 2
+			cnt++
+		}
+	}
+	return
 }
 
 //!-intset
