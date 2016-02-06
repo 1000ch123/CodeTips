@@ -122,3 +122,17 @@ func Example_ex3_3() {
 	// Output:
 	// {16 144}
 }
+
+func Example_ex3_4() {
+	var x IntSet
+	x.AddAll(1, 9, 144)
+
+	for _, v := range x.Elems() {
+		fmt.Println(v)
+	}
+
+	// Output:
+	// 1
+	// 9
+	// 14
+}

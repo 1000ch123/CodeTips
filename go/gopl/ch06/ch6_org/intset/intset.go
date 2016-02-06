@@ -110,6 +110,10 @@ func (s *IntSet) SymmetricDiffernceWith(t *IntSet) {
 	}
 }
 
+func (s *IntSet) Elems() []int {
+	return []int{0}
+}
+
 //!-intset
 
 //!+string
