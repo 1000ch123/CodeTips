@@ -86,6 +86,15 @@ func (s *IntSet) UnionWith(t *IntSet) {
 	}
 }
 
+func (s *IntSet) IntersectWith(t *IntSet) {
+}
+
+func (s *IntSet) DifferenceWith(t *IntSet) {
+}
+
+func (s *IntSet) SymmetricDiffernceWith(t *IntSet) {
+}
+
 //!-intset
 
 //!+string

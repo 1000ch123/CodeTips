@@ -86,3 +86,39 @@ func Example_ex2() {
 	// Output:
 	// {1 9 144}
 }
+
+func Example_ex3_1() {
+	var x, y IntSet
+	x.AddAll(1, 9, 144)
+	y.AddAll(1, 9, 16)
+
+	x.IntersectWith(&y)
+	fmt.Println(&x) // "{1 9}"
+
+	// Output:
+	// {1 9}
+}
+
+func Example_ex3_2() {
+	var x, y IntSet
+	x.AddAll(1, 9, 144)
+	y.AddAll(1, 9, 16)
+
+	x.DifferenceWith(&y)
+	fmt.Println(&x) // "{144}"
+
+	// Output:
+	// {144}
+}
+
+func Example_ex3_3() {
+	var x, y IntSet
+	x.AddAll(1, 9, 144)
+	y.AddAll(1, 9, 16)
+
+	x.SymmetricDiffernceWith(&y)
+	fmt.Println(&x) // "{144 16}"
+
+	// Output:
+	// {144 16}
+}
