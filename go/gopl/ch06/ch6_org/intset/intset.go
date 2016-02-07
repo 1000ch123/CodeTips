@@ -16,12 +16,14 @@ import (
 // An IntSet is a set of small non-negative integers.
 // Its zero value represents the empty set.
 type IntSet struct {
-	words []uint64
+	words []uint
 }
+
+const bitsize = 32 << (^uint(0) >> 63)
 
 // Has reports whether the set contains the non-negative value x.
 func (s *IntSet) Has(x int) bool {
-	word, bit := x/64, uint(x%64)
+	word, bit := x/bitsize, uint(x%bitsize)
 	return word < len(s.words) && s.words[word]&(1<<bit) != 0
 }
 
@@ -39,7 +41,7 @@ func (s *IntSet) Len() (cnt int) {
 
 // Add adds the non-negative value x to the set.
 func (s *IntSet) Add(x int) {
-	word, bit := x/64, uint(x%64)
+	word, bit := x/bitsize, uint(x%bitsize)
 	for word >= len(s.words) {
 		s.words = append(s.words, 0)
 	}
@@ -57,19 +59,19 @@ func (s *IntSet) Remove(x int) {
 		return
 	}
 
-	word, bit := x/64, uint(x%64)
+	word, bit := x/bitsize, uint(x%bitsize)
 	s.words[word] ^= 1 << bit
 
 	return
 }
 
 func (s *IntSet) Clear() {
-	s.words = []uint64{0}
+	s.words = []uint{0}
 	return
 }
 
 func (s *IntSet) Copy() *IntSet {
-	words := make([]uint64, s.Len())
+	words := make([]uint, s.Len())
 	copy(words, s.words)
 	t := IntSet{words}
 	return &t
@@ -115,7 +117,7 @@ func (s *IntSet) Elems() (vs []int) {
 		cnt := 0
 		for word > 0 {
 			if word%2 == 1 {
-				vs = append(vs, cnt+64*i)
+				vs = append(vs, cnt+bitsize*i)
 			}
 			word = word / 2
 			cnt++
@@ -136,12 +138,12 @@ func (s *IntSet) String() string {
 		if word == 0 {
 			continue
 		}
-		for j := 0; j < 64; j++ {
+		for j := 0; j < bitsize; j++ {
 			if word&(1<<uint(j)) != 0 {
 				if buf.Len() > len("{") {
 					buf.WriteByte(' ')
 				}
-				fmt.Fprintf(&buf, "%d", 64*i+j)
+				fmt.Fprintf(&buf, "%d", bitsize*i+j)
 			}
 		}
 	}
