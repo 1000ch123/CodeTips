@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import random
-from itertools import combinations
+from itertools import combinations, chain
+from collections import Counter
 
 
 def gen_scores(num_campany=4, num_students=10):
@@ -50,6 +51,27 @@ def score(score_map, pattern):
     return result
 
 
+def is_vaild_patterns(num_students, min_count, max_count, patterns):
+    """
+    与えられたpatternsが実用に耐えうるか
+    patternsをflattenしてcounterにぶち込む
+    各countがmin~maxの間にあればok
+    """
+    def valid(count):
+        return min_count <= count and count <= max_count
+
+    counter = Counter()
+    for i in range(num_students):
+        counter[i] = 0
+
+    print(patterns)
+    flatten = chain.from_iterable
+    for i in flatten(flatten(patterns)):
+        counter[i] += 1
+
+    print(counter)
+    return all(valid(x) for x in counter.values())
+
 if __name__ == '__main__':
     campanies = 3
     students = 8
@@ -62,5 +84,6 @@ if __name__ == '__main__':
 
     sorted_result = sorted(result, key=lambda x: x[1], reverse=True)
 
-    for i in sorted_result:
-        print(i)
+    result = is_vaild_patterns(students, 1, campanies,
+                               [x[0] for x in sorted_result[:3]])
+    print(result)
