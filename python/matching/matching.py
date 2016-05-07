@@ -42,6 +42,25 @@ def canididates(people, sel):
         yield sel, all.difference(sel)
 
 
+def score(score_map, pattern):
+    result = 0
+    for ix, students in enumerate(pattern):
+        for student in students:
+            result += score_map[ix][student]
+    return result
+
+
 if __name__ == '__main__':
-    for i in gen_candidates(3, 7, 1):
+    campanies = 3
+    students = 8
+    students_per_campany = 2
+    score_map = gen_scores()
+    candidates = gen_candidates(campanies, students, students_per_campany)
+
+    calc = lambda x: score(score_map, x)
+    result = [(i, calc(i)) for i in candidates]
+
+    sorted_result = sorted(result, key=lambda x: x[1], reverse=True)
+
+    for i in sorted_result:
         print(i)
