@@ -19,23 +19,28 @@ func main() {
 	}
 	defer db.Close()
 
-	// data
-	m := &Message{1, "message"}
-	json_data, err := json.Marshal(m)
-	if err != nil {
-		return
+	for i := 0; i < 10; i++ {
+		// data
+		m := &Message{i, "message"}
+		json_data, err := json.Marshal(m)
+		if err != nil {
+			return
+		}
+
+		// insert
+		key := fmt.Sprintf("message:%d", i)
+		err = db.Put([]byte(key), json_data, nil)
+		if err != nil {
+			return
+		}
 	}
 
-	// insert
-	err = db.Put([]byte("key"), json_data, nil)
-	if err != nil {
-		return
+	iter := db.NewIterator(nil, nil)
+	for iter.Next() {
+		key := iter.Key()
+		value := iter.Value()
+		fmt.Printf("%v: %v\n", string(key), string(value))
 	}
-
-	// fetch
-	data, err := db.Get([]byte("key"), nil)
-	if err != nil {
-		return
-	}
-	fmt.Println(string(data))
+	iter.Release()
+	err = iter.Error()
 }
